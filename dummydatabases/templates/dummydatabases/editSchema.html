@@ -1,0 +1,83 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    Edit Schema
+{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+        <br>
+        <form id="backBtnForm" action="{% url 'schemasView' %}" method="post">
+            {% csrf_token %}
+            <button class="btn btn-outline-warning" id="backBtn">< back</button>
+        </form>
+        <br>
+        <h1>Edit Schema</h1>
+        <br>
+        <form method="post" action="{% url 'saveSchema' %}">
+            {% csrf_token %}
+            <input type="hidden" name="schemaId" value="{{ schema.id }}" />
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input class="form-control" id="name" name="name" type="text" min="1" max="30" placeholder="schema name" value="{{ schema.name }}"  />
+            </div>
+            <br>
+            <button type="submit" class="btn btn-outline-success" role="button">save changes</button>
+        </form>
+        <br>
+        <br>
+        {% if not isNew %}
+            <div>
+                <h3 class="d-inline align-bottom">Tables</h3>
+                <form class="d-inline m-3" method="post" action="{% url 'editTable' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="isNew" value="true" />
+                    <button type="submit" class="btn btn-outline-primary" role="button">add table</button>
+                </form>
+            </div>
+            <br>
+            <br>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Table Name</th>
+                        <th>Row Count</th>
+                        <th>Field Count</th>
+                        <th>Association Count</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for table in tableDetails %}
+                    <tr>
+                        <td>{{ table.name }}</td>
+                        <td>{{ table.rowCount }}</td>
+                        <td>{{ table.fields }}</td>
+                        <td>{{ table.associations }}</td>
+                        <td>
+                            <form method="post" action="{% url 'editTable' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="isNew" value="false" />
+                                <input type="hidden" name="tableId" value="{{ table.id }}" />
+                                <button type="submit" class="btn btn-outline-info">edit table</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form method="post" action="{% url 'removeTable' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="tableId" value="{{ table.id }}" />
+                                <button class="btn btn-outline-danger deleteBtn">delete table</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <br>
+        {% endif %}
+    </div>
+{% endblock %}
+{% block js %}
+    <script src="{% static 'js/confirmation.js' %}"></script>
+{% endblock %}

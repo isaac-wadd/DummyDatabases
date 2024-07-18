@@ -1,0 +1,93 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    Download Database
+{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+        <br>
+        <h1>Download Database '{{ schema.name }}'</h1>
+        <br>
+        <form method="post" action="{% url 'generateDatabase' %}">
+            {% csrf_token %}
+            <input type="hidden" name="schemaId" value="{{ schema.id }}" />
+            <div class="form-group">
+                <label for="dbType">Database Type:</label>
+                <select class="form-control" id="dbType" name="dbType">
+                    <option value="MONGODB">MongoDB</option>
+                    <option value="MYSQL">MySQL</option>
+                    <option value="POSTGRESQL">PostgreSQL</option>
+                    <option value="SQLITE" selected>SQLite</option>
+                </select>
+                <br>
+            </div>
+            <div class="form-group">
+                <div id="sqliteOptions">
+                    <label for="fileType">File Type:</label>
+                    <select class="form-control" name="fileType" id="fileType">
+                        <option value="sqlite3" selected>.sqlite3 (database file)</option>
+                        <option value="sql">.sql (SQL script file)</option>
+                    </select>
+                </div>
+            </div>
+            <br>
+            <button type="submit" class="btn btn-outline-warning" role="button">download file</button>
+        </form>
+        <br>
+        <div id="mongoDbInstructions" style="display: none;">
+            <h5>How to use with MongoDB</h5>
+        </div>
+        <div id="mysqlInstructions" style="display: none;">
+            <h5>How to use with MySQL</h5>
+        </div>
+        <div id="postgresqlInstructions" style="display: none;">
+            <h5>How to use with PostgreSQL</h5>
+            <br>
+            <p>
+                <i>If you're using PostgreSQL we recommend</i>
+                <a href="https://www.pgadmin.org/download/" target="_blank" rel="noreferrer noopener"> downloading pgAdmin</a>.
+                <h6>Using a .sql backup file</h6>
+                <ul>
+                    <li>open 'pgAdmin'</li>
+                    <li>right click 'Databases' and navigate 'Create' > 'Database...'</li>
+                    <li>enter the name for the new database (best to name it the same as your schema)</li>
+                    <li>enter the owner for the new database (most likely 'postgres')</li>
+                    <li>click 'Save'</li>
+                    <li>right click on 'Databases' and select 'Refresh'</li>
+                    <li>make sure 'Databases' dropdown is expanded</li>
+                    <li>right click on the new database and select 'Query Tool'</li>
+                    <li>select the folder icon in the top left of the new tab</li>
+                    <li>select the new file you downloaded</li>
+                    <li>press F5 on your keyboard or click the play button icon above the new query</li>
+                    <li>right click on the new database and select 'Refresh...'</li>
+                </ul>
+            </p>
+        </div>
+        <div id="sqliteInstructions">
+            <h5>How to use with SQLite</h5>
+            <br>
+            <p>
+                <i>If you're using SQLite, whether you download a .sqlite3 file or a .sql file, we recommend</i>
+                <a href="https://sqlitebrowser.org/dl/" target="_blank" rel="noreferrer noopener"> downloading DB Browser for SQLite</a>.
+                <h6>Using a .sqlite3 database file (recommended method)</h6>
+                <ul>
+                    <li>open 'DB Browser for SQLite'</li>
+                    <li>click 'open database' in the top menu</li>
+                    <li>navigate to the folder to which the .sqlite3 file was downloaded</li>
+                    <li>select the .sqlite3 file</li>
+                </ul>
+                <h6>Using a .sql backup file</h6>
+                <ul>
+                    <li>open 'DB Browser for SQLite'</li>
+                    <li>navigate to File > Import > Database from SQL file...</li>
+                    <li>select the .sql file that you just downloaded</li>
+                    <li>add a name for the new database (sqlite3 file) to be saved as</li>
+                </ul>
+            </p>
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script src="{% static 'js/downloadOptions.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,142 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    Edit Table
+{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+        <br>
+        <form id="backBtnForm" action="{% url 'editSchema' %}" method="post">
+            {% csrf_token %}
+            <button class="btn btn-outline-warning" id="backBtn">< back</button>
+        </form>
+        <br>
+        <h1>Edit Table</h1>
+        <br>
+        <form method="post" action="{% url 'saveTable' %}">
+            {% csrf_token %}
+            <input type="hidden" name="tableId" value="{{ table.id }}" />
+            <div class="form-group">
+                <label for="name">Table Name:</label>
+                <input class="form-control" id="name" name="name" type="text" minlength="1" maxlength="30" placeholder="table name" value="{{ table.name }}" />
+            </div>
+            <br>
+            <div class="form-group">
+                <label for="rowCount">Row Count:</label>
+                <input class="form-control" id="rowCount" name="rowCount" type="number" min="2" max="1000" value="{{ table.rowCount }}" />
+            </div>
+            <br>
+            <button type="submit" class="btn btn-outline-success" role="button">save changes</button>
+        </form>
+        <br>
+        <br>
+        {% if not isNew %}
+            <div>
+                <h3 class="d-inline align-bottom">Fields</h3>
+                <form class="d-inline m-3" method="post" action="{% url 'editField' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="tableId" value="{{ table.id }}" />
+                    <input type="hidden" name="isNew" value="true" />
+                    <button type="submit" class="btn btn-outline-primary" role="button">add field</button>
+                </form>
+            </div>
+            <br>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Field Name</th>
+                        <th>Data Type</th>
+                        <th>Edit</th>
+                        <th>Remove</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for field in fields %}
+                        <tr>
+                            <td>
+                                {{ field.name }}
+                            </td>
+                            <td>
+                                {{ field.dataType }}
+                            </td>
+                            <td>
+                                <form method="post" action="{% url 'editField' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="tableId" value="{{ table.id }}" />
+                                    <input type="hidden" name="fieldId" value="{{ field.id }}" />
+                                    <input type="hidden" name="isNew" value="false" />
+                                    <button type="submit" class="btn btn-outline-info">edit field</button>
+                                </form>
+                            </td>
+                            <td>
+                                <form method="post" action="{% url 'removeField' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="fieldId" value="{{ field.id }}" />
+                                    <button class="btn btn-outline-danger deleteBtn">delete field</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <br>
+            <div>
+                <h3 class="d-inline align-bottom">Associations</h3>
+                <form class="d-inline m-3" method="post" action="{% url 'editAssociation' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="tableId" value="{{ table.id }}" />
+                    <input type="hidden" name="isNew" value="true" />
+                    <button type="submit" class="btn btn-outline-primary" role="button">add association</button>
+                </form>
+            </div>
+            <br>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Table Name</th>
+                        <th>Association Type</th>
+                        <th>Edit</th>
+                        <th>Remove</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for association in associations %}
+                    <tr>
+                        <td>
+                            {% if association.table1 == table %}
+                                {{ association.table2 }}
+                            {% else %}
+                                {{ association.table1 }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {{ association.type }}
+                        </td>
+                        <td>
+                            <form method="post" action="{% url 'editAssociation' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="tableId" value="{{ table.id }}" />
+                                <input type="hidden" name="associationId" value="{{ association.id }}" />
+                                <input type="hidden" name="isNew" value="false" />
+                                <button type="submit" class="btn btn-outline-info" role="button">edit association</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form method="post" action="{% url 'removeAssociation' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="associationId" value="{{ association.id }}" />
+                                <button type="submit" class="btn btn-outline-danger" role="button">delete association</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <br>
+        {% endif %}
+    </div>
+{% endblock %}
+{% block js %}
+    <script src="{% static 'js/confirmation.js' %}"></script>
+{% endblock %}

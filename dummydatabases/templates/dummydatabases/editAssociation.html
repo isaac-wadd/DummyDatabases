@@ -1,0 +1,72 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    Edit Association
+{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+        <br>
+        <form id="backBtnForm" action="{% url 'editTable' %}" method="post">
+            {% csrf_token %}
+            <button class="btn btn-outline-warning" id="backBtn">< back</button>
+        </form>
+        <br>
+        <h1>Edit Association</h1>
+        <br>
+        <h3>from table '{{ table }}'</h3>
+        <br>
+        <form method="post" action="{% url 'saveAssociation' %}">
+            {% csrf_token %}
+            <input type="hidden" name="associationId" value="{{ association.id }}" />
+            <div class="form-group">
+                <label for="table2">To table:</label>
+                <select class="form-control" id="table2" name="table2">
+                    {% for table in tables %}
+                        {% if association.table2 == table %}
+                            <option value="{{ table.id }}" selected>{{ table }}</option>
+                        {% else %}
+                            <option value="{{ table.id }}">{{ table }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+            <br>
+            <div class="form-group">
+                <label for="type">Association Type:</label>
+                <select class="form-control" id="type" name="type">
+                    {% for k, v in types %}
+                        {% if association.type == v %}
+                            <option value="{{ k }}" selected>{{ v }}</option>
+                        {% else %}
+                            <option value="{{ k }}">{{ v }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+            <br>
+            <div class="form-group" id="numberEl"
+                {% if association.type != 'many to many' %}
+                    style="display: none;"
+                {% endif %}
+            >
+                <label for="rowCount">Number of Associaitons (0 for default 50):</label>
+                <input type="number" id="rowCount" name="rowCount" value="{{ association.rowCount }}" />
+            </div>
+            <br>
+            <br>
+            <button type="submit" class="btn btn-outline-success" role="button">save changes</button>
+        </form>
+        <br>
+        <form method="post" action="{% url 'removeAssociation' %}">
+            {% csrf_token %}
+            <input type="hidden" name="associationId" value="{{ association.id }}" />
+            <button class="btn btn-outline-danger deleteBtn">delete association</button>
+        </form>
+        <br>
+    </div>
+{% endblock %}
+{% block js %}
+    <script src="{% static 'js/associationOptions.js' %}"></script>
+    <script src="{% static 'js/confirmation.js' %}"></script>
+{% endblock %}

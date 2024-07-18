@@ -1,0 +1,20 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    About
+{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+        <br>
+        <p>With this free, easy-to-use thingy you can do stuff.</p>
+        <br>
+        {% if user.is_authenticated %}
+            Go to <a href="{% url 'schemasView' %}">your schemas</a> to get started.
+        {% else %}
+            Get started by <a href="{% url 'registerView' %}">creating an account</a>.
+            <br>
+            Already have one? <a href="{% url 'loginView' %}">log in here</a>.
+        {% endif %}
+    </div>
+{% endblock %}

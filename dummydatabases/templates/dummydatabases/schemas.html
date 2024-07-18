@@ -1,0 +1,69 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    My Schemas
+{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+        <br>
+        <div>
+            <h1 class="d-inline align-bottom">My Schemas</h1>
+            <form class="d-inline m-3" method="post" action="{% url 'editSchema' %}">
+                {% csrf_token %}
+                <input type="hidden" name="isNew" value="true" />
+                <button type="submit" class="btn btn-outline-primary">create new schema</button>
+            </form>
+        </div>
+        <br>
+        <br>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Tables</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                    <th>Finalize</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for schema in schemaDetails %}
+                <tr>
+                    <td>
+                        {{ schema.name }}
+                    </td>
+                    <td>
+                        {{ schema.tables }}
+                    </td>
+                    <td>
+                        <form method="post" action="{% url 'editSchema' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="isNew" value="false" />
+                            <input type="hidden" name="schemaId" value="{{ schema.id }}" />
+                            <button type="submit" class="btn btn-outline-info">edit schema</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form method="post" action="{% url 'removeSchema' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="schemaId" value="{{ schema.id }}" />
+                            <button class="btn btn-outline-danger deleteBtn">delete schema</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form method="post" action="{% url 'downloadDatabase' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="schemaId" value="{{ schema.id }}" />
+                            <button type="submit" class="btn btn-outline-warning">create database</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+{% block js %}
+    <script src="{% static 'js/confirmation.js' %}"></script>
+{% endblock %}

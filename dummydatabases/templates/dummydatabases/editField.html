@@ -1,0 +1,367 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    Edit Field
+{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+        <br>
+        <form id="backBtnForm" action="{% url 'editTable' %}" method="post">
+            {% csrf_token %}
+            <button class="btn btn-outline-warning" id="backBtn">< back</button>
+        </form>
+        <br>
+        <h1>Edit Field</h1>
+        <br>
+        <form method="post" action="{% url 'saveField' %}">
+            {% csrf_token %}
+            <input type="hidden" name="fieldId" value="{{ field.id }}" />
+            <div class="form-group">
+                <label for="name">Field Name:</label>
+                <input class="form-control" id="name" name="name" type="text" minlength="1" maxlength="30" placeholder="field name" value="{{ field.name }}"  />
+            </div>
+            <br>
+
+<!-- field data type selection -->
+
+            <div class="form-group">
+                <label for="fieldTypes">Data Type:</label>
+                <select class="form-control" id="fieldTypes" name="dataType">
+                    {% for k, v in types %}
+                        {% if field.dataType == k %}
+                            <option value="{{ k }}" selected>{{ v }} ({{ k }})</option>
+                        {% else %}
+                            <option value="{{ k }}">{{ v }} ({{ k }})</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+            <br>
+            <button type="submit" class="btn btn-outline-success" role="button">save changes</button>
+            <br>
+            <br>
+
+<!-- string dataset selection -->
+
+            <div class="form-group" id="stringOptions"
+                {% if not field.dataType == 'TEXT' %}
+                    style="display: none;"
+                {% endif %}
+            >
+                <label for="stringDataOptions">Data Options:</label>
+                <select class="form-control" name="stringDataOptions" id="stringDataOptions">
+                    <option value="stringRandom"
+                        {% if fieldOptions.random %}
+                            selected
+                        {% endif %}
+                    >random</option>
+                    <option value="firstNames"
+                        {% if fieldOptions.firstNames %}
+                            selected
+                        {% endif %}
+                    >first names (people)</option>
+                    <option value="lastNames"
+                        {% if fieldOptions.lastNames %}
+                            selected
+                        {% endif %}
+                    >last names (people)</option>
+                    <option value="countries"
+                        {% if fieldOptions.countries %}
+                            selected
+                        {% endif %}
+                    >countries</option>
+                    <option value="phoneNumbers"
+                        {% if fieldOptions.phoneNumbers %}
+                            selected
+                        {% endif %}
+                    >phone numbers</option>
+                </select>
+            </div>
+
+<!-- random string options -->
+
+            <br>
+            <div class="form-group strOptions" id="stringRandomOptions"
+                {% if not fieldOptions.random %}
+                    style="display: none;"
+                {% endif %}
+            >
+                <br>
+                <div class="form-group">
+                    <div class="form-check ms-3">
+                        <input type="checkbox" class="form-check-input" name="length" id="length"
+                            {% if fieldOptions.randomOptions.length.max or fieldOptions.randomOptions.length.min %}
+                                checked
+                            {% endif %}
+                        />
+                        <label class="form-check-label" for="length">Specify Length (default 8)</label>
+                    </div>
+                    <br>
+                    <div class="form-control ms-5">
+                        <label class="form-label" for="minLength">Minimum Length: </label>
+                        <input type="number" name="minLength" id="minLength" value="{{ fieldOptions.randomOptions.length.min }}" />
+                    </div>
+                    <br>
+                    <div class="form-control ms-5">
+                        <label class="form-label" for="maxLength">Maximum Length: </label>
+                        <input type="number" name="maxLength" id="maxLength" value="{{ fieldOptions.randomOptions.length.max }}" />
+                    </div>
+                </div>
+                <br>
+                <div class="form-group ms-2">
+                    <h6>Include</h6>
+                    <br>
+                    <div class="form-check ms-2">
+                        <input type="checkbox" class="form-check-input" name="alpha" id="alpha"
+                            {% if fieldOptions.randomOptions.includes.alpha.upper or fieldOptions.randomOptions.includes.alpha.lower or fieldOptions.randomOptions.includes.alpha.hexOnly %}
+                                checked
+                            {% endif %}
+                        />
+                        <label class="form-check-label" for="alpha">Alpha Characters</label>
+                    </div>
+                    <br>
+                    <div class="form-check ms-5">
+                        <input type="checkbox" class="form-check-input" name="upper" id="upper"
+                            {% if fieldOptions.randomOptions.includes.alpha.upper %}
+                                checked
+                            {% endif %}
+                        />
+                        <label class="form-check-label" for="upper">Uppercase</label>
+                    </div>
+                    <br>
+                    <div class="form-check ms-5">
+                        <input type="checkbox" class="form-check-input" name="lower" id="lower"
+                            {% if fieldOptions.randomOptions.includes.alpha.lower %}
+                                checked
+                            {% endif %}
+                        />
+                        <label class="form-check-label" for="lower">Lowercase</label>
+                    </div>
+                    <br>
+                    <div class="form-check ms-5">
+                        <input type="checkbox" class="form-check-input" name="hexOnly" id="hexOnly"
+                            {% if fieldOptions.randomOptions.includes.alpha.hexOnly %}
+                                checked
+                            {% endif %}
+                        />
+                        <label class="form-check-label" for="hexOnly">Hex Only ('ABCDEF')</label>
+                    </div>
+                    <br>
+                    <div class="form-check ms-2">
+                        <input type="checkbox" class="form-check-input" name="numeric" id="numeric"
+                            {% if fieldOptions.randomOptions.includes.numeric %}
+                                checked
+                            {% endif %}
+                        />
+                        <label class="form-check-label" for="numeric">Numeric Characters</label>
+                    </div>
+                    <br>
+                    <div class="form-check ms-2">
+                        <input type="checkbox" class="form-check-input" name="misc" id="misc"
+                            {% if fieldOptions.randomOptions.includes.misc %}
+                                checked
+                            {% endif %}
+                        />
+                        <label class="form-check-label" for="misc">Miscellaneous Characters</label>
+                    </div>
+                </div>
+            </div>
+
+<!-- random integer options -->
+
+            <div class="form-group" id="intOptions"
+                {% if not field.dataType == 'INT' %}
+                    style="display: none;"
+                {% endif %}
+            >
+                <br>
+                <div class="form-control">
+                    <label class="form-label" for="intMin">Minimum Value: </label>
+                    <input type="number" name="intMin" id="intMin" value="{{ fieldOptions.min }}" />
+                </div>
+                <br>
+                <div class="form-control">
+                    <label class="form-label" for="intMax">Maximum Value: </label>
+                    <input type="number" name="intMax" id="intMax" value="{{ fieldOptions.max }}" />
+                </div>
+                <br>
+                <div class="form-control">
+                    <label class="form-label" for="intAvg">Average Value (default is none specified): </label>
+                    <input type="number" name="intAvg" id="intAvg" value="{{ fieldOptions.average }}" />
+                </div>
+            </div>
+
+<!-- random float options -->
+
+            <div class="form-group" id="floatOptions"
+                {% if not field.dataType == 'REAL' %}
+                    style="display: none;"
+                {% endif %}
+            >
+                <br>
+                <div class="form-control">
+                    <label class="form-label" for="precision">Decimal Precision (decimal places): </label>
+                    <input type="number" name="precision" id="precision" value="{{ fieldOptions.precision }}" />
+                </div>
+                <br>
+                <div class="form-control">
+                    <label class="form-label" for="floatMin">Minimum Value: </label>
+                    <input type="number" name="floatMin" id="floatMin" value="{{ fieldOptions.min }}" />
+                </div>
+                <br>
+                <div class="form-control">
+                    <label class="form-label" for="floatMax">Maximum Value: </label>
+                    <input type="number" name="floatMax" id="floatMax" value="{{ fieldOptions.max }}" />
+                </div>
+                <br>
+                <div class="form-control">
+                    <label class="form-label" for="floatAvg">Average Value (default is none specified): </label>
+                    <input type="number" name="floatAvg" id="floatAvg" value="{{ fieldOptions.average }}" />
+                </div>
+            </div>
+
+<!-- random datetime options -->
+
+            <div class="form-group" id="dateTimeOptions"
+                {% if not field.dataType == 'DATETIME' %}
+                    style="display: none;"
+                {% endif %}
+            >
+                <br>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" name="includeTime" id="includeTime"
+                        {% if fieldOptions.includeTime %}
+                            checked
+                        {% endif %}
+                    />
+                    <label class="form-check-label" for="includeTime">include time (or else date only): </label>
+                </div>
+                <br>
+                <div class="form-control">
+                    <label class="form-label" for="minDate">Minimum (earliest) Date: </label>
+                    <input type="date" name="minDate" id="minDate" value="{{ fieldOptions.minDate }}" />
+                </div>
+                <br>
+                <div class="form-control">
+                    <label class="form-label" for="maxDate">Maximum (latest) Date: </label>
+                    <input type="date" name="maxDate" id="maxDate" value="{{ fieldOptions.maxDate }}" />
+                </div>
+            </div>
+
+<!-- first names options -->
+
+            <div class="form-group strOptions" id="firstNamesOptions"
+                {% if not fieldOptions.firstNames %}
+                    style="display: none;"
+                {% endif %}
+            >
+                <select class="form-control" name="firstNamesCase" id="firstNamesCase">
+                    <option value="title"
+                        {% if fieldOptions.firstNamesOptions.case == 'title' %}
+                            selected
+                        {% endif %}
+                    >title case</option>
+                    <option value="lower"
+                        {% if fieldOptions.firstNamesOptions.case == 'lower' %}
+                            selected
+                        {% endif %}
+                    >lowercase</option>
+                    <option value="upper"
+                        {% if fieldOptions.firstNamesOptions.case == 'upper' %}
+                            selected
+                        {% endif %}
+                    >uppercase</option>
+                </select>
+                <br>
+                <h6>Include</h6>
+                <br>
+                <div class="form-check ms-2">
+                    <input type="checkbox" class="form-check-input" name="female" id="female"
+                        {% if fieldOptions.firstNamesOptions.female %}
+                            checked
+                        {% endif %}
+                    />
+                    <label class="form-check-label" for="female">female names</label>
+                </div>
+                <div class="form-check ms-2">
+                    <br>
+                    <input type="checkbox" class="form-check-input" name="male" id="male"
+                        {% if fieldOptions.firstNamesOptions.male %}
+                            checked
+                        {% endif %}
+                    />
+                    <label class="form-check-label" for="male">male names</label>
+                </div>
+            </div>
+
+<!-- last names options -->
+
+            <div class="form-group strOptions" id="lastNamesOptions"
+                {% if not fieldOptions.lastNames %}
+                    style="display: none;"
+                {% endif %}
+            >
+                <select class="form-control" name="lastNamesCase" id="lastNamesCase">
+                    <option value="title"
+                        {% if fieldOptions.lastNamesOptions.case == 'title' %}
+                            selected
+                        {% endif %}
+                    >title case</option>
+                    <option value="lower"
+                        {% if fieldOptions.lastNamesOptions.case == 'lower' %}
+                            selected
+                        {% endif %}
+                    >lowercase</option>
+                    <option value="upper"
+                        {% if fieldOptions.lastNamesOptions.case == 'upper' %}
+                            selected
+                        {% endif %}
+                    >uppercase</option>
+                </select>
+            </div>
+
+<!-- countries options -->
+
+            <div class="form-group strOptions" id="countriesOptions"
+                {% if not fieldOptions.countries %}
+                    style="display: none;"
+                {% endif %}
+            >
+                <select class="form-control" name="countriesCase" id="countriesCase">
+                    <option value="name"
+                        {% if fieldOptions.countriesOptions.case == 'name' %}
+                            selected
+                        {% endif %}
+                    >country name</option>
+                    <option value="code"
+                        {% if fieldOptions.countriesOptions.case == 'code' %}
+                            selected
+                        {% endif %}
+                    >country code</option>
+                </select>
+            </div>
+
+<!-- phone numbers options -->
+
+            <div class="form-group strOptions" id="phoneNumbersOptions"
+                {% if not fieldOptions.phoneNumbers %}
+                    style="display: none;"
+                {% endif %}
+            >
+                <input type="checkbox" class="form-check-input" name="areaCode" id="areaCode"
+                    {% if fieldOptions.phoneNumbersOptions.areaCode %}
+                        checked
+                    {% endif %}
+                />
+                <label class="form-check-label" for="areaCode">include area code</label>
+            </div>
+
+        </form>
+        <br>
+    </div>
+{% endblock %}
+{% block js %}
+    <script src="{% static 'js/fieldOptions.js' %}"></script>
+    <script src="{% static 'js/confirmation.js' %}"></script>
+{% endblock %}
