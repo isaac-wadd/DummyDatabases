@@ -102,14 +102,13 @@ def genDbData(schema, data):
         valuesStr = ' VALUES\n'
         for indx in range(len(fieldData[0])):
             newData = [ d[indx] for d in fieldData ]
-            print(newData)
             values = ''
             for value in newData:
-                if str(type(value)) == '<class \'str\'>' | '<class \'datetime.datetime\'>':
+                if str(type(value)) == '<class \'str\'>' or str(type(value)) == '<class \'datetime.datetime\'>':
                     if str(type(value)) == '<class \'datetime.datetime\'>':
                         value = datetime.date(value)
                     values += f'\'{value}\', '
-                elif str(type(value)) == '<class \'int\'>' | '<class \'float\'>':
+                elif str(type(value)) == '<class \'int\'>' or str(type(value)) == '<class \'float\'>':
                     values += f'{value}, '
                 else:
                     values += f'\'{value}\', '

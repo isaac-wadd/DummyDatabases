@@ -24,12 +24,22 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-0b&*3@7%5t1$m&uya#r7ay-1#&-38=(arw0ige5+z)ab9+fqwi'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     'customdummydata.com',
     'www.customdummydata.com',
+    'localhost',
+    '127.0.0.1',
 ]
+
+# additional security measures for production deployment
+# SECURE_HSTS_SECONDS = 31536000
+# SECURE_CONTENT_TYPE_NOSNIFF = True
+# SECURE_BROWSER_XSS_FILTER = True
+# SECURE_SSL_REDIRECT = True
+# SECURE_SSL_HOST = 'www.customdummydata.com'
+# SESSION_COOKIE_SECURE = True
 
 
 # Application definition
