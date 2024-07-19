@@ -39,6 +39,20 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_BROWSER_XSS_FILTER = True
 SESSION_COOKIE_SECURE = True
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://customdummydata.com',
+    'https://www.customdummydata.com',
+]
+
+CSRF_ALLOWED_ORIGINS = [
+    'https://customdummydata.com',
+    'https://www.customdummydata.com',
+]
+
+CORS_ORIGINS_WHITELIST = [
+    'https://customdummydata.com',
+    'https://www.customdummydata.com',
+]
 
 # Application definition
 
