@@ -49,23 +49,21 @@ def genRandomStringData(options, rowCount):
 # generates first names data
 
 def genFirstNamesData(includes, rowCount, strCase):
-    match includes:
-        case (True, True):
-            fileName = 'allFirstNames.json'
-        case (True, False):
-            fileName = 'femaleFirstNames.json'
-        case (False, True):
-            fileName = 'maleFirstNames.json'
-        case _:
-            fileName = 'allFirstNames.json'
+    if includes == (True, True):
+        fileName = 'allFirstNames.json'
+    elif includes == (True, False):
+        fileName = 'femaleFirstNames.json'
+    elif includes == (False, True):
+        fileName = 'maleFirstNames.json'
+    else:
+        fileName = 'allFirstNames.json'
     file = open(getFilePath(fileName), 'r')
     content = json.load(file)
     file.close()
-    match strCase:
-        case 'lower':
-            content = [ name.lower() for name in content ]
-        case 'upper':
-            content = [ name.upper() for name in content ]
+    if strCase == 'lower':
+        content = [ name.lower() for name in content ]
+    elif strCase == 'upper':
+        content = [ name.upper() for name in content ]
     return [ r.choice(content) for _ in range(rowCount) ]
 
 # generates data for string field
@@ -118,15 +116,14 @@ def genDateData(options, rowCount):
 def genTableData(table):
     fieldsData = {}
     for field in Field.objects.filter(table=table):
-        match field.dataType:
-            case 'TEXT':
-                fieldsData.update({field.name: genStringData(field.options, table.rowCount)})
-            case 'INTEGER':
-                fieldsData.update({field.name: genIntData(field.options, table.rowCount)})
-            case 'REAL':
-                fieldsData.update({field.name: genFloatData(field.options, table.rowCount)})
-            case 'DATETIME':
-                fieldsData.update({field.name: genDateData(field.options, table.rowCount)})
-            case _:
-                fieldsData.update({field.name: genStringData(field.options, table.rowCount)})
+        if field.dataType == 'TEXT':
+            fieldsData.update({field.name: genStringData(field.options, table.rowCount)})
+        elif field.dataType == 'INTEGER':
+            fieldsData.update({field.name: genIntData(field.options, table.rowCount)})
+        elif field.dataType == 'REAL':
+            fieldsData.update({field.name: genFloatData(field.options, table.rowCount)})
+        elif field.dataType == 'DATETIME':
+            fieldsData.update({field.name: genDateData(field.options, table.rowCount)})
+        else:
+            fieldsData.update({field.name: genStringData(field.options, table.rowCount)})
     return fieldsData

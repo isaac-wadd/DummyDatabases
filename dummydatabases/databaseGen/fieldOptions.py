@@ -5,40 +5,39 @@ from .models import *
 
 def getStringFieldOptions(postData):
     options = Field.getDefaultStringOptions()
-    match postData.get('stringDataOptions'):
-        case 'stringRandom':
-            options['random'] = True
-            if postData.get('length'):
-                options['randomOptions']['length']['max'] = int(postData.get('maxLength'))
-                options['randomOptions']['length']['min'] = int(postData.get('minLength'))
-            if postData.get('alpha'):
-                if postData.get('upper'):
-                    options['randomOptions']['includes']['alpha']['upper'] = True
-                if postData.get('lower'):
-                    options['randomOptions']['includes']['alpha']['lower'] = True
-                if postData.get('hexOnly'):
-                    options['randomOptions']['includes']['alpha']['hexOnly'] = True
-            if postData.get('numeric'):
-                options['randomOptions']['includes']['numeric'] = True
-            if postData.get('misc'):
-                options['randomOptions']['includes']['misc'] = True
-        case 'firstNames':
-            options['firstNames'] = True
-            options['firstNamesOptions']['case'] = postData.get('firstNamesCase')
-            if not postData.get('female'):
-                options['firstNamesOptions']['female'] = False
-            if not postData.get('male'):
-                options['firstNamesOptions']['male'] = False
-        case 'lastNames':
-            options['lastNames'] = True
-            options['lastNamesOptions']['case'] = postData.get('lastNamesCase')
-        case 'countries':
-            options['countries'] = True
-            options['countriesOptions']['case'] = postData.get('countriesCase')
-        case 'phoneNumbers':
-            options['phoneNumbers'] = True
-            if postData.get('areaCode'):
-                options['phoneNumbersOptions']['areaCode'] = True
+    if postData.get('stringDataOptions') == 'stringRandom':
+        options['random'] = True
+        if postData.get('length'):
+            options['randomOptions']['length']['max'] = int(postData.get('maxLength'))
+            options['randomOptions']['length']['min'] = int(postData.get('minLength'))
+        if postData.get('alpha'):
+            if postData.get('upper'):
+                options['randomOptions']['includes']['alpha']['upper'] = True
+            if postData.get('lower'):
+                options['randomOptions']['includes']['alpha']['lower'] = True
+            if postData.get('hexOnly'):
+                options['randomOptions']['includes']['alpha']['hexOnly'] = True
+        if postData.get('numeric'):
+            options['randomOptions']['includes']['numeric'] = True
+        if postData.get('misc'):
+            options['randomOptions']['includes']['misc'] = True
+    elif postData.get('stringDataOptions') == 'firstNames':
+        options['firstNames'] = True
+        options['firstNamesOptions']['case'] = postData.get('firstNamesCase')
+        if not postData.get('female'):
+            options['firstNamesOptions']['female'] = False
+        if not postData.get('male'):
+            options['firstNamesOptions']['male'] = False
+    elif postData.get('stringDataOptions') == 'lastNames':
+        options['lastNames'] = True
+        options['lastNamesOptions']['case'] = postData.get('lastNamesCase')
+    elif postData.get('stringDataOptions') == 'countries':
+        options['countries'] = True
+        options['countriesOptions']['case'] = postData.get('countriesCase')
+    elif postData.get('stringDataOptions') == 'phoneNumbers':
+        options['phoneNumbers'] = True
+        if postData.get('areaCode'):
+            options['phoneNumbersOptions']['areaCode'] = True
     return options
 
 # creates options object for integer field
@@ -82,14 +81,13 @@ def getDateTimeFieldOptions(postData):
 # creates and returns options based on type of field
 
 def getFieldOptions(fieldType, post):
-    match fieldType:
-        case 'TEXT':
-            return getStringFieldOptions(post)
-        case 'INTEGER':
-            return getIntFieldOptions(post)
-        case 'REAL':
-            return getFloatFieldOptions(post)
-        case 'DATETIME':
-            return getDateTimeFieldOptions(post)
-        case _:
-            return getStringFieldOptions(post)
+    if fieldType == 'TEXT':
+        return getStringFieldOptions(post)
+    elif fieldType == 'INTEGER':
+        return getIntFieldOptions(post)
+    elif fieldType == 'REAL':
+        return getFloatFieldOptions(post)
+    elif fieldType == 'DATETIME':
+        return getDateTimeFieldOptions(post)
+    else:
+        return getStringFieldOptions(post)

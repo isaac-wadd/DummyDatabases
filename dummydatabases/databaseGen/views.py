@@ -305,17 +305,16 @@ def generateDatabase(req):
         tableData.update({table.name: genTableData(table)})
     dbType = req.POST.get('dbType')
     fileType = req.POST.get('fileType')
-    match dbType:
-        case 'MONGODB':
-            fileExtension = ''
-        case 'MYSQL':
-            fileExtension = ''
-        case 'POSTGRESQL':
-            fileExtension = 'sql'
-        case 'SQLITE':
-            fileExtension = fileType
-        case _:
-            fileExtension = 'sqlite3'
+    if dbType == 'MONGODB':
+        fileExtension = ''
+    elif dbType == 'MONGODB':
+        fileExtension = ''
+    elif dbType == 'MONGODB':
+        fileExtension = 'sql'
+    elif dbType == 'MONGODB':
+        fileExtension = fileType
+    else:
+        fileExtension = 'sqlite3'
     filePath = f'{schema.name}.{fileExtension}'
     generateFile(schema, tableData, dbType, fileType)
     res = downloadFile(filePath)

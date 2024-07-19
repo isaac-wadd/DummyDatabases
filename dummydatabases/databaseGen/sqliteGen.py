@@ -128,10 +128,9 @@ def genDbData(schema, data):
 def generateSqliteFile(schema, tableData, fileType):
     statement = genDbStructure(schema)
     statement += genDbData(schema, tableData)
-    match fileType:
-        case 'sqlite3':
-            writeAll(schema, statement)
-        case 'sql':
-            genSqlFile(schema, statement)
-        case _:
-            writeAll(schema, statement)
+    if fileType == 'sqlite3':
+        writeAll(schema, statement)
+    elif fileType == 'sql':
+        genSqlFile(schema, statement)
+    else:
+        writeAll(schema, statement)
