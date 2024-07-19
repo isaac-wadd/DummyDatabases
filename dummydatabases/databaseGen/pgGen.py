@@ -47,7 +47,7 @@ def genDbStructure(schema):
         for field in Field.objects.filter(table=table):
             fieldsStr += f'{field.name} '
             if field.dataType == 'TEXT':
-                fieldType = f'varchar({field.options['randomOptions']['length']['max']})'
+                fieldType = f'varchar({field.options["randomOptions"]["length"]["max"]})'
             elif field.dataType == 'INTEGER':
                 fieldType = 'integer'
             elif field.dataType == 'REAL':
