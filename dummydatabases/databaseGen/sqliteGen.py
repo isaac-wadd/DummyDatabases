@@ -105,15 +105,14 @@ def genDbData(schema, data):
             print(newData)
             values = ''
             for value in newData:
-                match str(type(value)):
-                    case '<class \'str\'>' | '<class \'datetime.datetime\'>':
-                        if str(type(value)) == '<class \'datetime.datetime\'>':
-                            value = datetime.date(value)
-                        values += f'\'{value}\', '
-                    case '<class \'int\'>' | '<class \'float\'>':
-                        values += f'{value}, '
-                    case _:
-                        values += f'\'{value}\', '
+                if str(type(value)) == '<class \'str\'>' | '<class \'datetime.datetime\'>':
+                    if str(type(value)) == '<class \'datetime.datetime\'>':
+                        value = datetime.date(value)
+                    values += f'\'{value}\', '
+                elif str(type(value)) == '<class \'int\'>' | '<class \'float\'>':
+                    values += f'{value}, '
+                else:
+                    values += f'\'{value}\', '
             values = values[:-2]
             valuesStr += f'\t({values}),\n'
         valuesStr = f'{valuesStr[:-2]};\n\n'
