@@ -307,11 +307,11 @@ def generateDatabase(req):
     fileType = req.POST.get('fileType')
     if dbType == 'MONGODB':
         fileExtension = ''
-    elif dbType == 'MONGODB':
+    elif dbType == 'MYSQL':
         fileExtension = ''
-    elif dbType == 'MONGODB':
+    elif dbType == 'POSTGRESQL':
         fileExtension = 'sql'
-    elif dbType == 'MONGODB':
+    elif dbType == 'SQLITE':
         fileExtension = fileType
     else:
         fileExtension = 'sqlite3'

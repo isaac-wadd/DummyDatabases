@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '0b&*3@7%5t1$m&uya#r7ay-1#&-38=(arw0ige5+z)ab9+fqwi'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     'customdummydata.com',
@@ -149,7 +149,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'dummydatabases/static'),
-    '/var/www/html/static',
 ]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

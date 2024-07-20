@@ -8,7 +8,7 @@ from django.conf import settings
 
 def genSqlFile(schema, statement):
     filePath = os.path.join(settings.MEDIA_ROOT, f'{schema.name}.sql')
-    with open(filePath, 'w') as sqlFile:
+    with open(filePath, 'w+') as sqlFile:
         sqlFile.write(statement)
         sqlFile.close()
 
@@ -16,7 +16,7 @@ def genSqlFile(schema, statement):
 
 def writeAll(schema, statement):
     filePath = os.path.join(settings.MEDIA_ROOT, f'{schema.name}.sqlite3')
-    open(filePath, 'w').close()
+    open(filePath, 'w+').close()
     con = sqlite3.connect(filePath)
     cur = con.cursor()
     cur.executescript(statement)
@@ -104,11 +104,11 @@ def genDbData(schema, data):
             newData = [ d[indx] for d in fieldData ]
             values = ''
             for value in newData:
-                if str(type(value)) == '<class \'str\'>' or str(type(value)) == '<class \'datetime.datetime\'>':
+                if type(value).__name__ == 'str' or type(value).__name__ == 'datetime':
                     if str(type(value)) == '<class \'datetime.datetime\'>':
                         value = datetime.date(value)
                     values += f'\'{value}\', '
-                elif str(type(value)) == '<class \'int\'>' or str(type(value)) == '<class \'float\'>':
+                elif type(value).__name__ == 'int' or type(value).__name__ == 'float':
                     values += f'{value}, '
                 else:
                     values += f'\'{value}\', '
