@@ -271,8 +271,8 @@ def downloadView(req):
     res = render(req, 'dummydatabases/downloadOptions.html', ctxt)
     return res
 
-def downloadFile(path):
-    filePath = os.path.join(settings.MEDIA_ROOT, path)
+def downloadFile(fileName):
+    filePath = os.path.join(settings.MEDIA_ROOT, fileName)
     if os.path.exists(filePath):
         with open(filePath, 'rb') as fh:
             response = HttpResponse(fh.read(), content_type='application/octet-stream')
@@ -280,8 +280,8 @@ def downloadFile(path):
             return response
     raise Http404
 
-def deleteFile(path):
-    filePath = os.path.join(settings.MEDIA_ROOT, path)
+def deleteFile(fileName):
+    filePath = os.path.join(settings.MEDIA_ROOT, fileName)
     if os.path.exists(filePath):
         os.remove(filePath)
 
@@ -315,8 +315,8 @@ def generateDatabase(req):
         fileExtension = fileType
     else:
         fileExtension = 'sqlite3'
-    filePath = f'{schema.name}.{fileExtension}'
+    fileName = f'{schema.name}.{fileExtension}'
     generateFile(schema, tableData, dbType, fileType)
-    res = downloadFile(filePath)
-    deleteFile(filePath)
+    res = downloadFile(fileName)
+    deleteFile(fileName)
     return res

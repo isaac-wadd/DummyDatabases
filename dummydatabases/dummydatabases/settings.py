@@ -154,8 +154,8 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'dummydatabases/static'),
 ]
 
-MEDIA_ROOT = '/var/www/html/media/'
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = '/var/www/html/media/'
 MEDIA_URL = 'media/'
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = [
