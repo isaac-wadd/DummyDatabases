@@ -28,9 +28,7 @@ def schemasView(req):
             'name': schema.name,
             'tables': Table.objects.filter(schema=schema).count()
         })
-    ctxt = {
-        'schemaDetails': schemaDetails
-    }
+    ctxt = { 'schemaDetails': schemaDetails }
     res = render(req, 'dummydatabases/schemas.html', ctxt)
     res.delete_cookie('currentSchema')
     res.delete_cookie('currentTable')
@@ -46,13 +44,10 @@ def registerView(req):
             login(req, user)
             res = redirect('/schemas')
             return res
-    else:
-        form = RegistrationForm()
-        ctxt = {
-            'form': form
-        }
-        res = render(req, 'dummydatabases/register.html', ctxt)
-        return res
+    form = RegistrationForm()
+    ctxt = { 'form': form }
+    res = render(req, 'dummydatabases/register.html', ctxt)
+    return res
 
 def loginView(req):
     if req.method == 'POST':
@@ -62,15 +57,11 @@ def loginView(req):
             login(req, user)
             res = redirect('/schemas')
             return res
-        else:
-            raise ValidationError('invalid credentials', code='invalid credentials')
-    else:
-        form = AuthenticationForm()
-        ctxt = {
-            'form': form
-        }
-        res = render(req, 'dummydatabases/login.html', ctxt)
-        return res
+        raise ValidationError('invalid credentials', code='invalid credentials')
+    form = AuthenticationForm()
+    ctxt = { 'form': form }
+    res = render(req, 'dummydatabases/login.html', ctxt)
+    return res
 
 def logoutView(req):
     logout(req)

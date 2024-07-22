@@ -54,7 +54,9 @@ CORS_ORIGINS_WHITELIST = [
     'https://www.customdummydata.com',
 ]
 
-ADMINS = [('Isaac', 'isaac.wadd@gmail.com')]
+ADMINS = [
+    ('Isaac', 'isaac.wadd@gmail.com')
+]
 
 # Application definition
 
