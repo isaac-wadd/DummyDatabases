@@ -274,13 +274,13 @@ def downloadView(req):
 def downloadFile(fileName):
     filePath = os.path.join(settings.MEDIA_ROOT, fileName)
     if os.path.exists(filePath):
-        print('okay!')
+        print(f'okay! filepath={filePath}')
         with open(filePath, 'rb') as fh:
             res = HttpResponse(fh.read(), content_type='application/octet-stream')
             res['Content-Disposition'] = 'inline; filename=' + os.path.basename(filePath)
             return res
     else:
-        print('not okay!')
+        print(f'not okay filepath={filePath}!')
         raise Http404
 
 def deleteFile(fileName):
