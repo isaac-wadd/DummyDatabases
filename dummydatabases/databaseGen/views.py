@@ -275,9 +275,9 @@ def downloadFile(fileName):
     filePath = os.path.join(settings.MEDIA_ROOT, fileName)
     if os.path.exists(filePath):
         with open(filePath, 'rb') as fh:
-            response = HttpResponse(fh.read(), content_type='application/octet-stream')
-            response['Content-Disposition'] = 'inline; filename=' + os.path.basename(filePath)
-            return response
+            res = HttpResponse(fh.read(), content_type='application/octet-stream')
+            res['Content-Disposition'] = 'inline; filename=' + os.path.basename(filePath)
+            return res
     raise Http404
 
 def deleteFile(fileName):
@@ -315,8 +315,7 @@ def generateDatabase(req):
         fileExtension = fileType
     else:
         fileExtension = 'sqlite3'
-    fileName = f'{schema.name}.{fileExtension}'
+    fileName = f'{schema.name}{schema.id}.{fileExtension}'
     generateFile(schema, tableData, dbType, fileType)
     res = downloadFile(fileName)
-    deleteFile(fileName)
     return res
