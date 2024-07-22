@@ -274,11 +274,14 @@ def downloadView(req):
 def downloadFile(fileName):
     filePath = os.path.join(settings.MEDIA_ROOT, fileName)
     if os.path.exists(filePath):
+        print('okay!')
         with open(filePath, 'rb') as fh:
             res = HttpResponse(fh.read(), content_type='application/octet-stream')
             res['Content-Disposition'] = 'inline; filename=' + os.path.basename(filePath)
             return res
-    raise Http404
+    else:
+        print('not okay!')
+        raise Http404
 
 def deleteFile(fileName):
     filePath = os.path.join(settings.MEDIA_ROOT, fileName)
@@ -318,4 +321,5 @@ def generateDatabase(req):
     fileName = f'{schema.name}{schema.id}.{fileExtension}'
     generateFile(schema, tableData, dbType, fileType)
     res = downloadFile(fileName)
+    deleteFile(fileName)
     return res
